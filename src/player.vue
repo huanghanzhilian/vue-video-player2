@@ -10,6 +10,7 @@
 <script>
 window.videojs = require('video.js');
 window.m3u8Parser = require('m3u8-parser');
+require('videojs-contrib-quality-levels');
 //window.libjass = require('libjass')
 //require('videojs-settings-menu');
 //var sssswwo = require('videojs-settings-menu/dist/videojs-settings-menu');
@@ -51,7 +52,7 @@ export default {
     }
   },
   mounted: function() {
-    if (!this.player) {
+    if (this.player) {
       this.initialize()
     }
   },
@@ -167,36 +168,42 @@ export default {
 
       // videoOptions
       //console.log(videoOptions)
-      var xmlhttp;
-      var listak = [];
-      if (videoOptions.sources) {
-        if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-          xmlhttp = new XMLHttpRequest();
-        } else { // code for IE6, IE5
-          xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-        xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            //console.log(xmlhttp.responseText)
-            var parser = new m3u8Parser.Parser();
+      // var xmlhttp;
+      // var listak = [];
+      // if (videoOptions.sources) {
+      //   if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+      //     xmlhttp = new XMLHttpRequest();
+      //   } else { // code for IE6, IE5
+      //     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      //   }
+      //   xmlhttp.onreadystatechange = function() {
+      //     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      //       //console.log(xmlhttp.responseText)
+      //       var parser = new m3u8Parser.Parser();
 
-            parser.push(xmlhttp.responseText);
-            parser.end();
+      //       parser.push(xmlhttp.responseText);
+      //       parser.end();
 
-            var parsedManifest = parser.manifest;
-            listak = parsedManifest.playlists;
-            siso();
-            //console.log(parsedManifest)
-            //console.log(listak)
-            //document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
-          }
-        }
-        xmlhttp.open("GET", videoOptions.sources[0].src, true);
-        xmlhttp.send();
-      }
+      //       var parsedManifest = parser.manifest;
+      //       listak = parsedManifest.playlists;
+      //       siso();
+      //       //console.log(parsedManifest)
+      //       //console.log(listak)
+      //       //document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
+      //     }
+      //   }
+      //   xmlhttp.open("GET", videoOptions.sources[0].src, true);
+      //   xmlhttp.send();
+      // }
 
       function siso() {
+        
         if (listak.length) {
+          var current_list = self.player.hls.playlists.master.playlists;
+        console.log(current_list)
+
+
+
           videojs.Hls.xhr.beforeRequest = function(options) {
             //console.log(options)
             if (listak.length) {
@@ -227,6 +234,15 @@ export default {
 
 
 
+
+      
+
+
+
+
+
+
+
       // avoid error "VIDEOJS: ERROR: Unable to find plugin: __ob__"
       if (videoOptions.plugins) {
         delete videoOptions.plugins.__ob__
@@ -234,8 +250,9 @@ export default {
       var vjs_ass;
 
       this.$el.children[0].crossOrigin = "anonymous";
-      this.player = videojs(this.$el.children[0], videoOptions, function() {
 
+      this.player = videojs(this.$el.children[0], videoOptions, function() {
+        
         /*if (videoOptions.ass) {
           vjs_ass = this.ass(videoOptions.ass);
         }*/
@@ -263,6 +280,8 @@ export default {
           })
         }
 
+        
+
         // player readied
         var _this = this
         self.$emit('ready', self.player)
@@ -289,6 +308,84 @@ export default {
         this.on('timeupdate', function() {
           emitPlayerState('timeupdate', this.currentTime())
         })
+        this.on('progress',function(){
+          if(videoOptions.sources){
+            //console.log(this.tech_.hls.playlists.master.playlists)
+            var current_list = this.tech_.hls.playlists.master.playlists;
+            //console.log(current_list)
+            var lsee=this.tech_.hls.representations();
+            for (var i = 0; i < lsee.length; i++) {
+              if(lsee[i].height){
+                if(lsee[i].height==480){
+                  //this.tech_.hls.playlists.media(current_list[0]);
+                  //lsee[i].enabled(true);
+                  //break;
+                }else if(lsee[i].height==720){
+                  this.tech_.hls.playlists.media(current_list[1]);
+                  lsee[i].enabled(true);
+                  break;
+                }else if(lsee[i].height==1080){
+                  this.tech_.hls.playlists.media(current_list[0]);
+                  lsee[i].enabled(true);
+                  break;
+                }else if(lsee[i].height==1440){
+                  this.tech_.hls.playlists.media(current_list[0]);
+                  lsee[i].enabled(true);
+                  break;
+                }else if(lsee[i].height==2160){
+                  this.tech_.hls.playlists.media(current_list[0]);
+                  lsee[i].enabled(true);
+                  break;
+                }
+
+              }
+            }
+            this.handleTechPlaying_();
+          }
+        })
+
+        //console.log(this)
+        this.on('loadeddata', function() {
+          if(videoOptions.sources){
+            //console.log(this.tech_.hls.playlists.master.playlists)
+            var current_list = this.tech_.hls.playlists.master.playlists;
+            //console.log(current_list)
+            var lsee=this.tech_.hls.representations();
+            for (var i = 0; i < lsee.length; i++) {
+              if(lsee[i].height){
+                if(lsee[i].height==480){
+                  //this.tech_.hls.playlists.media(current_list[0]);
+                  //lsee[i].enabled(true);
+                  //break;
+                }else if(lsee[i].height==720){
+                  this.tech_.hls.playlists.media(current_list[1]);
+                  lsee[i].enabled(true);
+                  break;
+                }else if(lsee[i].height==1080){
+                  this.tech_.hls.playlists.media(current_list[0]);
+                  lsee[i].enabled(true);
+                  break;
+                }else if(lsee[i].height==1440){
+                  this.tech_.hls.playlists.media(current_list[0]);
+                  lsee[i].enabled(true);
+                  break;
+                }else if(lsee[i].height==2160){
+                  this.tech_.hls.playlists.media(current_list[0]);
+                  lsee[i].enabled(true);
+                  break;
+                }
+
+              }
+            }
+            this.handleTechPlaying_();
+          }
+        })
+
+
+
+
+
+
       })
     },
     dispose: function() {
