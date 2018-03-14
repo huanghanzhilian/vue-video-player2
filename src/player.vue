@@ -308,44 +308,8 @@ export default {
         this.on('timeupdate', function() {
           emitPlayerState('timeupdate', this.currentTime())
         })
-        // this.on('progress',function(){
-        //   if(videoOptions.sources){
-        //     //console.log(this.tech_.hls.playlists.master.playlists)
-        //     var current_list = this.tech_.hls.playlists.master.playlists;
-        //     //console.log(current_list)
-        //     var lsee=this.tech_.hls.representations();
-        //     for (var i = 0; i < lsee.length; i++) {
-        //       if(lsee[i].height){
-        //         if(lsee[i].height==480){
-        //           //this.tech_.hls.playlists.media(current_list[0]);
-        //           //lsee[i].enabled(true);
-        //           //break;
-        //         }else if(lsee[i].height==720){
-        //           this.tech_.hls.playlists.media(current_list[1]);
-        //           lsee[i].enabled(true);
-        //           break;
-        //         }else if(lsee[i].height==1080){
-        //           this.tech_.hls.playlists.media(current_list[0]);
-        //           lsee[i].enabled(true);
-        //           break;
-        //         }else if(lsee[i].height==1440){
-        //           this.tech_.hls.playlists.media(current_list[0]);
-        //           lsee[i].enabled(true);
-        //           break;
-        //         }else if(lsee[i].height==2160){
-        //           this.tech_.hls.playlists.media(current_list[0]);
-        //           lsee[i].enabled(true);
-        //           break;
-        //         }
-
-        //       }
-        //     }
-        //     this.handleTechPlaying_();
-        //   }
-        // })
-
-        //console.log(this)
-        this.on('loadeddata', function() {
+        this.on('progress',function(){
+          var that=this
           if(videoOptions.sources){
             //console.log(this.tech_.hls.playlists.master.playlists)
             var current_list = this.tech_.hls.playlists.master.playlists;
@@ -373,8 +337,51 @@ export default {
 
               }
             }
-            lsee.forEach(function(rep) {
+            lsee.forEach(function(rep,index) {
               if(rep.height === tsjow){
+                that.tech_.hls.playlists.media(current_list[index]);
+                rep.enabled(true);
+              }else{
+                rep.enabled(false);
+              }
+            })
+            this.handleTechPlaying_();
+          }
+        })
+
+        //console.log(this)
+        this.on('loadeddata', function() {
+          var that=this
+          if(videoOptions.sources){
+            //console.log(this.tech_.hls.playlists.master.playlists)
+            var current_list = this.tech_.hls.playlists.master.playlists;
+            //console.log(current_list)
+            var lsee=this.tech_.hls.representations();
+            var tsjow;
+            for (var i = 0; i < lsee.length; i++) {
+              if(lsee[i].height){
+                if(lsee[i].height==480){
+                  tsjow=480
+                  break;
+                }else if(lsee[i].height==720){
+                  tsjow=720
+                  break;
+                }else if(lsee[i].height==1080){
+                  tsjow=1080
+                  break;
+                }else if(lsee[i].height==1440){
+                  tsjow=1440
+                  break;
+                }else if(lsee[i].height==2160){
+                  tsjow=2160
+                  break;
+                }
+
+              }
+            }
+            lsee.forEach(function(rep,index) {
+              if(rep.height === tsjow){
+                that.tech_.hls.playlists.media(current_list[index]);
                 rep.enabled(true);
               }else{
                 rep.enabled(false);
