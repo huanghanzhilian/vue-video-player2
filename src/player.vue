@@ -308,41 +308,41 @@ export default {
         this.on('timeupdate', function() {
           emitPlayerState('timeupdate', this.currentTime())
         })
-        this.on('progress',function(){
-          if(videoOptions.sources){
-            //console.log(this.tech_.hls.playlists.master.playlists)
-            var current_list = this.tech_.hls.playlists.master.playlists;
-            //console.log(current_list)
-            var lsee=this.tech_.hls.representations();
-            for (var i = 0; i < lsee.length; i++) {
-              if(lsee[i].height){
-                if(lsee[i].height==480){
-                  //this.tech_.hls.playlists.media(current_list[0]);
-                  //lsee[i].enabled(true);
-                  //break;
-                }else if(lsee[i].height==720){
-                  this.tech_.hls.playlists.media(current_list[1]);
-                  lsee[i].enabled(true);
-                  break;
-                }else if(lsee[i].height==1080){
-                  this.tech_.hls.playlists.media(current_list[0]);
-                  lsee[i].enabled(true);
-                  break;
-                }else if(lsee[i].height==1440){
-                  this.tech_.hls.playlists.media(current_list[0]);
-                  lsee[i].enabled(true);
-                  break;
-                }else if(lsee[i].height==2160){
-                  this.tech_.hls.playlists.media(current_list[0]);
-                  lsee[i].enabled(true);
-                  break;
-                }
+        // this.on('progress',function(){
+        //   if(videoOptions.sources){
+        //     //console.log(this.tech_.hls.playlists.master.playlists)
+        //     var current_list = this.tech_.hls.playlists.master.playlists;
+        //     //console.log(current_list)
+        //     var lsee=this.tech_.hls.representations();
+        //     for (var i = 0; i < lsee.length; i++) {
+        //       if(lsee[i].height){
+        //         if(lsee[i].height==480){
+        //           //this.tech_.hls.playlists.media(current_list[0]);
+        //           //lsee[i].enabled(true);
+        //           //break;
+        //         }else if(lsee[i].height==720){
+        //           this.tech_.hls.playlists.media(current_list[1]);
+        //           lsee[i].enabled(true);
+        //           break;
+        //         }else if(lsee[i].height==1080){
+        //           this.tech_.hls.playlists.media(current_list[0]);
+        //           lsee[i].enabled(true);
+        //           break;
+        //         }else if(lsee[i].height==1440){
+        //           this.tech_.hls.playlists.media(current_list[0]);
+        //           lsee[i].enabled(true);
+        //           break;
+        //         }else if(lsee[i].height==2160){
+        //           this.tech_.hls.playlists.media(current_list[0]);
+        //           lsee[i].enabled(true);
+        //           break;
+        //         }
 
-              }
-            }
-            this.handleTechPlaying_();
-          }
-        })
+        //       }
+        //     }
+        //     this.handleTechPlaying_();
+        //   }
+        // })
 
         //console.log(this)
         this.on('loadeddata', function() {
@@ -351,32 +351,36 @@ export default {
             var current_list = this.tech_.hls.playlists.master.playlists;
             //console.log(current_list)
             var lsee=this.tech_.hls.representations();
+            var tsjow;
             for (var i = 0; i < lsee.length; i++) {
               if(lsee[i].height){
                 if(lsee[i].height==480){
-                  //this.tech_.hls.playlists.media(current_list[0]);
-                  //lsee[i].enabled(true);
-                  //break;
+                  tsjow=480
+                  break;
                 }else if(lsee[i].height==720){
-                  this.tech_.hls.playlists.media(current_list[1]);
-                  lsee[i].enabled(true);
+                  tsjow=720
                   break;
                 }else if(lsee[i].height==1080){
-                  this.tech_.hls.playlists.media(current_list[0]);
-                  lsee[i].enabled(true);
+                  tsjow=1080
                   break;
                 }else if(lsee[i].height==1440){
-                  this.tech_.hls.playlists.media(current_list[0]);
-                  lsee[i].enabled(true);
+                  tsjow=1440
                   break;
                 }else if(lsee[i].height==2160){
-                  this.tech_.hls.playlists.media(current_list[0]);
-                  lsee[i].enabled(true);
+                  tsjow=2160
                   break;
                 }
 
               }
             }
+            lsee.forEach(function(rep) {
+              if(rep.height === tsjow){
+                rep.enabled(true);
+              }else{
+                rep.enabled(false);
+              }
+            })
+            console.log(tsjow)
             this.handleTechPlaying_();
           }
         })
