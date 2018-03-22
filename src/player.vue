@@ -14,11 +14,7 @@ require('videojs-contrib-quality-levels');
 //window.libjass = require('libjass')
 //require('videojs-settings-menu');
 //var sssswwo = require('videojs-settings-menu/dist/videojs-settings-menu');
-//require('videojs-settings-menu/dist/videojs-settings-menu.css');
-//plugins
-//window.videojs = require('src/plugins/video.js')
-//require('src/plugins/videojs-settings-menu');
-//require('src/plugins/videojs-settings-menu.css');
+
 videojs = videojs.default || videojs
 export default {
   name: 'video-player',
@@ -68,7 +64,7 @@ export default {
       var self = this
       this.player = null
 
-      // videojs options
+      // videojs options 参数
       var videoOptions = Object.assign({
         autoplay: false,
         controls: true,
@@ -80,24 +76,6 @@ export default {
         language: 'en',
         "nativeControlsForTouch": true, //是否使用默认播放器控件
         customControlsOnMobile: true, //移动端
-        // nativeCaptions: true,
-        // nativeTextTracks: true,
-        // controlBar: {
-        //   // remainingTimeDisplay: false,
-        //   subtitlesButton: true, //字幕
-        //   captionsButton: true, //字幕带设置
-        //   chaptersButton: true,
-        //   // liveDisplay: false,
-        //   // playbackRateMenuButton: false,
-        //   // playToggle: {},
-        //   // progressControl: {},
-        //   // fullscreenToggle: {},
-        //   // subtitlesButton: {},
-        //   // volumeMenuButton: {
-        //   //   inline: false,
-        //   //   vertical: true
-        //   // }
-        // },
         controlBar: {
           children: {
             'playToggle': {},
@@ -107,16 +85,11 @@ export default {
             'timeDivider': {},
             'durationDisplay': {},
             'liveDisplay': {},
-
             'flexibleWidthSpacer': {},
             'progressControl': {},
-
             //'captionsButton': true,
             'subtitlesButton': true,
             //'chaptersButton': true,
-
-
-
             // 'settingsMenuButton': {
             //   entries: [
             //     'subtitlesButton',
@@ -132,12 +105,23 @@ export default {
         },
         techOrder: ['html5'],
         plugins: {},
+        // hls:{
+        //   overrideNative:true
+        // },
         html5: {
           nativeAudioTracks: false,
           nativeVideoTracks: false,
-          nativeTextTracks: true
+          nativeTextTracks: true,
+          hls: {
+            //withCredentials: true,
+            debug: false,
+            overrideNative: true
+          }
         },
       }, this.options)
+
+      //console.log(videoOptions)
+
 
       // check sources
       /*
@@ -166,83 +150,6 @@ export default {
         }
       }
 
-      // videoOptions
-      //console.log(videoOptions)
-      // var xmlhttp;
-      // var listak = [];
-      // if (videoOptions.sources) {
-      //   if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-      //     xmlhttp = new XMLHttpRequest();
-      //   } else { // code for IE6, IE5
-      //     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-      //   }
-      //   xmlhttp.onreadystatechange = function() {
-      //     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-      //       //console.log(xmlhttp.responseText)
-      //       var parser = new m3u8Parser.Parser();
-
-      //       parser.push(xmlhttp.responseText);
-      //       parser.end();
-
-      //       var parsedManifest = parser.manifest;
-      //       listak = parsedManifest.playlists;
-      //       siso();
-      //       //console.log(parsedManifest)
-      //       //console.log(listak)
-      //       //document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
-      //     }
-      //   }
-      //   xmlhttp.open("GET", videoOptions.sources[0].src, true);
-      //   xmlhttp.send();
-      // }
-
-      function siso() {
-        
-        if (listak.length) {
-          var current_list = self.player.hls.playlists.master.playlists;
-        console.log(current_list)
-
-
-
-          videojs.Hls.xhr.beforeRequest = function(options) {
-            //console.log(options)
-            if (listak.length) {
-              var opsk = listak[0].uri.slice(0, -2); //获取多码率子m3u8共同有的
-              var sowkls = options.uri.indexOf(opsk)
-              // //console.log(sowkls)
-              var dlp = options.uri.slice(30);
-              var dlasp = listak[0].uri;
-              var ops = listak[1].uri;
-              //console.log(options.uri)
-              //console.log(dlp)
-
-              if (sowkls != -1) {
-                // console.log(options.uri)
-                // console.log(dlasp)
-                // console.log(ops)
-                options.uri = options.uri.replace(dlasp, dlasp); //(dlasp, ops);
-              }
-              // console.log(options.uri.slice(32))
-              // console.log(listak[1].uri)
-              // console.log(options.uri)
-              return options;
-            }
-
-          };
-        }
-      };
-
-
-
-
-      
-
-
-
-
-
-
-
       // avoid error "VIDEOJS: ERROR: Unable to find plugin: __ob__"
       if (videoOptions.plugins) {
         delete videoOptions.plugins.__ob__
@@ -252,12 +159,27 @@ export default {
       this.$el.children[0].crossOrigin = "anonymous";
 
       this.player = videojs(this.$el.children[0], videoOptions, function() {
+        //修改视频src
+        this.on('ready',function(){
+          // this.src({
+          //   src: 'http://djyjlsv34fx05.cloudfront.net/10minscat/10minscat.m3u8',
+          //   type: "application/x-mpegURL",
+          //   withCredentials: false
+          // })
+        })
+        //加入请求头
+        this.hls.xhr.beforeRequest = function (options) {
+            //console.log(options)
+            //options.headers = options || {};
+            //options.headers['token'] = localStorage.getItem('token');
+        }
         
         /*if (videoOptions.ass) {
           vjs_ass = this.ass(videoOptions.ass);
         }*/
         //this.nativeTextTracks = true;
         if (videoOptions.ass) {
+          //console.log(videoOptions.ass)
           var track1 = {
             kind: 'subtitles',
             src: videoOptions.ass,
@@ -285,7 +207,6 @@ export default {
         // player readied
         var _this = this
         self.$emit('ready', self.player)
-
         // events
         var events = ['loadeddata',
           'canplay',
@@ -309,95 +230,98 @@ export default {
           emitPlayerState('timeupdate', this.currentTime())
         })
         this.on('progress',function(){
-          var that=this
-          if(videoOptions.sources){
-            //console.log(this.tech_.hls.playlists.master.playlists)
-            var current_list = this.tech_.hls.playlists.master.playlists;
-            //console.log(current_list)
-            var lsee=this.tech_.hls.representations();
-            var tsjow;
-            for (var i = 0; i < lsee.length; i++) {
-              if(lsee[i].height){
-                if(lsee[i].height==480){
-                  tsjow=480
-                  break;
-                }else if(lsee[i].height==720){
-                  tsjow=720
-                  break;
-                }else if(lsee[i].height==1080){
-                  tsjow=1080
-                  break;
-                }else if(lsee[i].height==1440){
-                  tsjow=1440
-                  break;
-                }else if(lsee[i].height==2160){
-                  tsjow=2160
-                  break;
-                }
+          // var that=this
+          // if(videoOptions.sources){
+          //   //console.log(this.tech_.hls.playlists.master.playlists)
+          //   var current_list = this.tech_.hls.playlists.master.playlists;
+          //   //console.log(current_list)
+          //   var lsee=this.tech_.hls.representations();
+          //   var tsjow;
+          //   for (var i = 0; i < lsee.length; i++) {
+          //     if(lsee[i].height){
+          //       if(lsee[i].height==480){
+          //         tsjow=480
+          //         break;
+          //       }else if(lsee[i].height==720){
+          //         tsjow=720
+          //         break;
+          //       }else if(lsee[i].height==1080){
+          //         tsjow=1080
+          //         break;
+          //       }else if(lsee[i].height==1440){
+          //         tsjow=1440
+          //         break;
+          //       }else if(lsee[i].height==2160){
+          //         tsjow=2160
+          //         break;
+          //       }
 
-              }
-            }
-            lsee.forEach(function(rep,index) {
-              if(rep.height === tsjow){
-                that.tech_.hls.playlists.media(current_list[index]);
-                rep.enabled(true);
-              }else{
-                rep.enabled(false);
-              }
-            })
-            this.handleTechPlaying_();
-          }
+          //     }
+          //   }
+          //   lsee.forEach(function(rep,index) {
+          //     if(rep.height === tsjow){
+          //       that.tech_.hls.playlists.media(current_list[index]);
+          //       rep.enabled(true);
+          //     }else{
+          //       rep.enabled(false);
+          //     }
+          //   })
+          //   this.handleTechPlaying_();
+          // }
         })
 
-        //console.log(this)
+        //
         this.on('loadeddata', function() {
-          var that=this
-          if(videoOptions.sources){
-            //console.log(this.tech_.hls.playlists.master.playlists)
-            var current_list = this.tech_.hls.playlists.master.playlists;
-            //console.log(current_list)
-            var lsee=this.tech_.hls.representations();
-            var tsjow;
-            for (var i = 0; i < lsee.length; i++) {
-              if(lsee[i].height){
-                if(lsee[i].height==480){
-                  tsjow=480
-                  break;
-                }else if(lsee[i].height==720){
-                  tsjow=720
-                  break;
-                }else if(lsee[i].height==1080){
-                  tsjow=1080
-                  break;
-                }else if(lsee[i].height==1440){
-                  tsjow=1440
-                  break;
-                }else if(lsee[i].height==2160){
-                  tsjow=2160
-                  break;
-                }
+          // var that=this
+          // if(videoOptions.sources){
+          //   //console.log(this.tech_.hls.playlists.master.playlists)
+          //   var current_list = this.tech_.hls.playlists.master.playlists;
+          //   //console.log(current_list)
+          //   var lsee=this.tech_.hls.representations();
+          //   var tsjow;
+          //   for (var i = 0; i < lsee.length; i++) {
+          //     if(lsee[i].height){
+          //       if(lsee[i].height==480){
+          //         tsjow=480
+          //         break;
+          //       }else if(lsee[i].height==720){
+          //         tsjow=720
+          //         break;
+          //       }else if(lsee[i].height==1080){
+          //         tsjow=1080
+          //         break;
+          //       }else if(lsee[i].height==1440){
+          //         tsjow=1440
+          //         break;
+          //       }else if(lsee[i].height==2160){
+          //         tsjow=2160
+          //         break;
+          //       }
 
-              }
-            }
-            lsee.forEach(function(rep,index) {
-              if(rep.height === tsjow){
-                that.tech_.hls.playlists.media(current_list[index]);
-                rep.enabled(true);
-              }else{
-                rep.enabled(false);
-              }
-            })
-            console.log(tsjow)
-            this.handleTechPlaying_();
-          }
+          //     }
+          //   }
+          //   lsee.forEach(function(rep,index) {
+          //     if(rep.height === tsjow){
+          //       that.tech_.hls.playlists.media(current_list[index]);
+          //       rep.enabled(true);
+          //     }else{
+          //       rep.enabled(false);
+          //     }
+          //   })
+          //   console.log(tsjow)
+          //   this.handleTechPlaying_();
+          // }
         })
-
-
-
-
 
 
       })
+      //修改已经初始化了的video
+      // this.player.src({
+      //   src: videoOptions.m3u8Urisave,
+      //   type: "application/x-mpegURL",
+      //   withCredentials: false
+      // });
+
     },
     dispose: function() {
       if (this.player && videojs) {
