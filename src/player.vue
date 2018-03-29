@@ -114,7 +114,7 @@ export default {
           nativeTextTracks: true,
           hls: {
             //withCredentials: true,
-            debug: false,
+            //debug: false,
             overrideNative: true
           }
         },
@@ -168,11 +168,11 @@ export default {
           // })
         })
         //加入请求头
-        this.hls.xhr.beforeRequest = function (options) {
-            //console.log(options)
-            //options.headers = options || {};
-            //options.headers['token'] = localStorage.getItem('token');
-        }
+        // this.hls.xhr.beforeRequest = function (options) {
+        //     //console.log(options)
+        //     //options.headers = options || {};
+        //     //options.headers['token'] = localStorage.getItem('token');
+        // }
         
         /*if (videoOptions.ass) {
           vjs_ass = this.ass(videoOptions.ass);
@@ -187,7 +187,8 @@ export default {
             label: 'chinasub',
             default: 'default'
           };
-          this.addRemoteTextTrack(track1, false);
+          console.log(track1)
+          this.addRemoteTextTrack(track1, true);
 
           var tracks = this.textTracks();
           tracks.on('change', function() {
@@ -209,6 +210,7 @@ export default {
         self.$emit('ready', self.player)
         // events
         var events = ['loadeddata',
+          'progress',
           'canplay',
           'canplaythrough',
           'play',
