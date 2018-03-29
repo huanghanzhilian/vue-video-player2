@@ -1,28 +1,35 @@
 {
-  "_from": "vue-video-player@v4.0.6",
+  "_from": "git+https://github.com/huanghanzhilian/vue-video-player2.git",
   "_id": "vue-video-player@4.0.6",
   "_inBundle": false,
   "_integrity": "sha512-kmHIOnk5cUpXbh2fPkAIxrBds2NZQQnTO3m79iy1bp6c+1EdcgxbFnL39T9If0wf8eCj2fOaWVsdmFFK6adyZg==",
   "_location": "/vue-video-player",
-  "_phantomChildren": {},
+  "_phantomChildren": {
+    "babel-runtime": "6.26.0",
+    "global": "4.3.2",
+    "safe-json-parse": "4.0.0",
+    "tsml": "1.0.1",
+    "videojs-font": "2.1.0",
+    "videojs-ie8": "1.1.2",
+    "xhr": "2.4.0"
+  },
   "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "vue-video-player@v4.0.6",
+    "type": "git",
+    "raw": "vue-video-player@git+https://github.com/huanghanzhilian/vue-video-player2.git",
     "name": "vue-video-player",
     "escapedName": "vue-video-player",
-    "rawSpec": "v4.0.6",
-    "saveSpec": null,
-    "fetchSpec": "v4.0.6"
+    "rawSpec": "git+https://github.com/huanghanzhilian/vue-video-player2.git",
+    "saveSpec": "git+https://github.com/huanghanzhilian/vue-video-player2.git",
+    "fetchSpec": "https://github.com/huanghanzhilian/vue-video-player2.git",
+    "gitCommittish": null
   },
   "_requiredBy": [
-    "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/vue-video-player/-/vue-video-player-4.0.6.tgz",
+  "_resolved": "git+https://github.com/huanghanzhilian/vue-video-player2.git#5060541b707544d3f791c4e636580c1752409bcb",
   "_shasum": "c95debaacb8fc8633e73295030cc70da7dd5c597",
-  "_spec": "vue-video-player@v4.0.6",
-  "_where": "D:\\porject\\20171111启动新项目\\vue-wap-samuredwonder",
+  "_spec": "vue-video-player@git+https://github.com/huanghanzhilian/vue-video-player2.git",
+  "_where": "/Users/macintoshhd/huang/workProjects/vue-wap-samuredwonder",
   "author": {
     "name": "Surmon",
     "email": "surmon@foxmail.com",
@@ -33,7 +40,7 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "video.js": "^6.2.4"
+    "video.js": "^5.10.1"
   },
   "deprecated": false,
   "description": "Video Player component for Vue",
